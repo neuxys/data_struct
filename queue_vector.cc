@@ -14,6 +14,7 @@
 
 #include <chrono>
 #include <iostream>
+#include <list>
 #include <queue>
 #include <vector>
 
@@ -76,12 +77,37 @@ class BlockingVector {
     std::vector<T> block_data;
     block_data.insert(block_data.end(), make_move_iterator(vector_.begin()),
                       make_move_iterator(vector_.begin() + num));
-    vector_.erase(vector_.begin(), vector_.begin() + num);
+    // vector_.erase(vector_.begin(), vector_.begin() + num);
     return block_data;
   }
 
  private:
   std::vector<T> vector_;
+};
+
+// The Container based std::list
+template <typename T>
+class BlockingList {
+ public:
+  BlockingList() {}
+  ~BlockingList() {}
+
+  void Push(std::vector<T> &&values) {
+    list_.insert(list_.end(), make_move_iterator(values.begin()),
+                 make_move_iterator(values.end()));
+  }
+
+  std::vector<T> Pop(size_t num) {
+    std::vector<T> block_data;
+    block_data.insert(block_data.end(), make_move_iterator(list_.begin()),
+                      make_move_iterator(list_.begin() + num));
+    block_data.emplace_back();
+    list_.erase(list_.begin(), list_.begin() + num);
+    return block_data;
+  }
+
+ private:
+  std::list<T> list_;
 };
 
 // source test data
@@ -113,7 +139,7 @@ void test_process(T &&container) {
   std::cout << "\tPush duration: " << t << std::endl;
 
   timer.Reset();
-  feats_output = std::move(container.Pop(kTotal));
+  feats_output = std::move(container.Pop(kTotal / 3));
   t = timer.Elapsed();
   std::cout << "\tPop duration: " << t << std::endl;
 }
@@ -121,6 +147,7 @@ void test_process(T &&container) {
 int main() {
   BlockingQueue<std::vector<float>> queue;
   BlockingVector<std::vector<float>> vector;
+  BlockingList<std::vector<float>> list;
 
   for (int i = 0; i < 3; i++) {
     std::cout << i << "-----------------" << std::endl;
@@ -130,6 +157,9 @@ int main() {
 
     std::cout << "--using vector" << std::endl;
     test_process(std::move(vector));
+
+    // std::cout << "--using list" << std::endl;
+    // test_process(std::move(list));
   }
 
   return 0;
