@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <chrono>
+#include <chrono>  // NOLINT [build/c++11]
 #include <iostream>
 #include <list>
 #include <queue>

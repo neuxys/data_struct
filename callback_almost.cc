@@ -16,8 +16,8 @@
 
 class Base {
  public:
-  Base(){};
-  virtual ~Base(){};
+  Base() {}
+  virtual ~Base() {}
 
   void get_val() { callback(val_); }
 

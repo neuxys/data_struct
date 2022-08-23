@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <chrono>
-#include <condition_variable>
+#include <chrono>              // NOLINT [build/c++11]
+#include <condition_variable>  // NOLINT [build/c++11]
 #include <iostream>
-#include <mutex>
+#include <mutex>  // NOLINT [build/c++11]
 #include <queue>
-#include <thread>
+#include <thread>  // NOLINT [build/c++11]
 
 int main() {
   std::queue<int> produced_num;

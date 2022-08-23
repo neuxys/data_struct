@@ -38,10 +38,6 @@
  * expired() ? shared_ptr<T>() : shared_ptr<T>(*this), executed atomically.
  */
 
-#include <functional>
-#include <iostream>
-#include <memory>
-
 void observe(std::weak_ptr<int> weak) {
   if (auto observe = weak.lock()) {
     std::cout << "\tobserve() able to lock weak_ptr<>, value=" << *observe
@@ -102,31 +98,31 @@ class A {
  public:
   A() {}
   ~A() {}
-  int var = 10;
-  void check() { std::cout << "var is " << var << std::endl; }
+  void check(int var) { std::cout << "var is " << var << std::endl; }
 };
 
 void LambdaWithReferencePtr() {
   auto a_unique_ptr = std::make_unique<A>();
   auto a_shared_ptr = std::make_shared<A>();
-  std::function<void()> f = [&] {
+
+  std::function<void(int)> f = [&](int var) {
     if (a_unique_ptr) {
       std::cout << "we can call with a_unique_ptr" << std::endl;
-      a_unique_ptr->check();
+      a_unique_ptr->check(var);
     } else {
       std::cout << "we can not call with a_unique_ptr" << std::endl;
     }
 
     if (a_shared_ptr) {
       std::cout << "we can call with a_shared_ptr" << std::endl;
-      a_shared_ptr->check();
+      a_shared_ptr->check(var);
     } else {
       std::cout << "we can not call with a_shared_ptr" << std::endl;
     }
   };
-  a_unique_ptr.reset();
-  a_shared_ptr.reset();
-  f();
+  // a_unique_ptr.reset();
+  // a_shared_ptr.reset();
+  f(56);
 }
 
 int main(void) {

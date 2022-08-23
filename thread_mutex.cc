@@ -13,8 +13,8 @@
 // limitations under the License.
 
 #include <iostream>
-#include <mutex>
-#include <thread>
+#include <mutex>   // NOLINT [build/c++11]
+#include <thread>  // NOLINT [build/c++11]
 
 void using_pthread_create() {
   std::thread t([]() { std::cout << "subthread.." << std::endl; });
